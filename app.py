@@ -1,16 +1,14 @@
 from flask import Flask, render_template
-import os
 
-# Configuração rigorosa para garantir que o Flask encontra os ficheiros no Mac
-app = Flask(__name__, 
-            static_url_path='/static', 
-            static_folder='static',
-            template_folder='templates')
+app = Flask(__name__)
 
+# Rota principal - Temporariamente a apontar para a manutenção
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Quando o site real estiver pronto, mudas isto de volta para 'index.html'
+    return render_template('manutencao.html')
 
 if __name__ == '__main__':
-    # O debug=True ajuda a ver erros no terminal se a fonte falhar
-    app.run(debug=True, port=5000)
+    # Esta linha é importante para o Render correr no ambiente de produção
+    # mas o Gunicorn no Render trata disso. Isto é mais para testes locais.
+    app.run()
