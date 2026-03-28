@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocarros de Braga</title>
+    <style>
+        @font-face {
+            font-family: 'DINBlack';
+            /* Nota: Confirma se dentro de fonts o ficheiro se chama DINBlack.woff2 */
+            src: url("{{ url_for('static', filename='fonts/DINBlack.woff2') }}") format('woff2');
+            font-weight: 900;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #374150 !important;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            font-family: 'DINBlack', Arial, sans-serif; 
+        }
+
+        img {
+            width: 200px; /* Ajustei para o teu SVG */
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="{{ url_for('static', filename='images/adb.svg') }}" alt="Logotipo AdB">
+    
+    <h1>Site em construção</h1>
+
+</body>
+</html>
