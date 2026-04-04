@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* --- ESTRUTURA GLOBAL --- */
+    .layout-linha { 
+        display: grid; 
+        grid-template-columns: 280px 1fr; 
+        min-height: 80vh; 
+        background-color: #f4f4f4; 
+    }
+
+    /* --- COLUNA ESQUERDA: HISTÓRICO --- */
+    .coluna-datas { 
+        background-color: #374150; 
+        padding: 50px 30px 50px 50px; 
+        color: white; 
+    }
+    .subtitulo-historico { 
+        font-family: 'DINBlack'; font-size: 11px; color: rgba(255,255,255,0.7); 
+        text-transform: uppercase; margin-bottom: 30px; display: block; 
+    }
+    .ano-item { 
+        font-family: 'DINBlack'; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.2); 
+        font-size: 14px; color: white; text-decoration: none; display: block; 
+    }
+    .ano-item.active { color: #374150; background-color: white; margin-left: -50px; padding-left: 50px; border-bottom: none; }
+
+    /* --- COLUNA DIREITA --- */
+    .coluna-conteudo { padding: 40px 60px; display: flex; flex-direction: column; }
+
+    /* CABEÇALHO SUPERIOR */
+    .header-top { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 60px; 
+    }
+    
+    .linha-info-principal { display: flex; align-items: center; }
+    
+    .icon-box-branco { 
+        background-color: white; color: #e30613; font-family: 'DINBlack'; 
+        font-size: 18px; width: 44px; height: 26px; 
+        display: flex; justify-content: center; align-items: center; 
+        border-radius: 6px; border: 1px solid #ddd; margin-right: 20px;
+    }
+    .percurso-titulo { font-family: 'DINBlack'; font-size: 18px; color: #374150; }
+
+    /* CONTROLES E DATA */
+    .nav-controles { display: flex; align-items: center; gap: 10px; }
+    .btn-sentido {
+        font-family: 'DINBlack'; font-size: 10px; text-decoration: none;
+        padding: 8px 16px; border-radius: 4px; border: 1px solid #027cb7; color: #027cb7;
+    }
+    .btn-sentido.active { background-color: #027cb7; color: white; }
+    
+    .data-box {
+        background-color: #1a1a1a; color: white; font-family: 'DINBlack';
+        font-size: 11px; padding: 8px 15px; border-radius: 4px; min-width: 140px; text-align: center;
+    }
+
+    /* GRID DE CONTEÚDO */
+    .info-grid { 
+        display: grid; 
+        grid-template-columns: 1fr 450px; 
+        gap: 60px; 
+        align-items: flex-start; 
+    }
+
+    .seccao-titulo { 
+        font-family: 'DINBlack'; color: #027cb7; font-size: 12px; 
+        margin-bottom: 25px; text-transform: uppercase; 
+    }
+
+    /* --- ITINERÁRIO (AJUSTADO) --- */
+    .itinerario { position: relative; margin-left: 40px; }
+    .itinerario::before { 
+        content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px; 
+        width: 5px; background-color: #027cb7; z-index: 1; 
+    }
+    .paragem { position: relative; display: flex; align-items: center; margin-bottom: 14px; z-index: 2; }
+    
+    .num-paragem { font-family: 'DINMedium'; font-size: 10px; color: #999; width: 25px; text-align: right; position: absolute; left: -45px; }
+    
+    .dot-container { display: flex; justify-content: center; align-items: center; width: 25px; margin-right: 15px; }
+    
+    .dot { 
+        width: 12px; height: 12px; background: white; border-radius: 50%; 
+        border: 2.5px solid #374150; box-sizing: border-box; 
+    }
+    .dot.terminal { width: 15px; height: 15px; border-width: 3px; }
+
+    /* Paragem M SEM CONTORNO */
+    .dot.limite-m { 
+        background: linear-gradient(to bottom, #e30613 50%, #027cb7 50%) !important; 
+        border: none !important; 
+        width: 15px; height: 15px; display: flex; justify-content: center; align-items: center;
+    }
+    .dot.limite-m::after { 
+        content: 'M'; font-family: 'DINBlack'; font-size: 7px; 
+        color: #374150; background: white; width: 9px; height: 9px; 
+        border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+    }
+
+    /* Cápsulas de código compactas */
+    .capsula { 
+        font-family: 'DINBlack'; font-size: 10px; color: white; 
+        padding: 2px 3px; border-radius: 100px; margin-right: 12px; 
+        min-width: 30px; text-align: center; 
+    }
+
+    /* Cápsula M AdB */
+    .bg-coroa-m-adb { 
+        background-color: white !important; 
+        color: #374150 !important; 
+        border: 1px solid #374150 !important; 
+    }
+
+    /* --- AJUSTE VITAL AdB: Tipografia dos Nomes --- */
+    .nome-paragem {
+        font-family: 'DINMedium'; /* Fonte padrão para paragens normais */
+        font-size: 14px; 
+        color: #374150;
+    }
+
+    /* Estilo AdB para Terminais (Início e Fim) */
+    .nome-terminal-adb {
+        font-family: 'DINBlack' !important; /* Fonte AdB para terminais */
+        font-size: 16px;
+        color: #374150;
+    }
+
+    /* CORES DAS COROAS PADRÃO (Bordas e Fundos) */
+    .coroa-1 { border-color: #027cb7 !important; }
+    .coroa-2 { border-color: #e30613 !important; }
+    .coroa-3 { border-color: #374150 !important; }
+
+    .bg-coroa-1 { background-color: #027cb7 !important; }
+    .bg-coroa-2 { background-color: #e30613 !important; }
+    .bg-coroa-3 { background-color: #374150 !important; }
+
+    /* --- HORÁRIOS --- */
+    .tabs-horarios { display: flex; gap: 5px; margin-bottom: 20px; background: #ddd; padding: 4px; border-radius: 8px; }
+    .tab-btn { flex: 1; padding: 10px; font-family: 'DINBlack'; font-size: 10px; border: none; cursor: pointer; border-radius: 6px; }
+    .tab-btn.active { background: white; color: #027cb7; }
+    
+    .tabela-horarios { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .tabela-horarios th { text-align: left; border-bottom: 2px solid #027cb7; color: #027cb7; font-size: 11px; padding: 10px 8px; }
+    .tabela-horarios td { padding: 12px 8px; border-bottom: 1px solid #e0e0e0; font-size: 15px; }
+    .col-h { width: 70px; }
+    .hora-txt { font-family: 'DINBlack'; color: #374150; }
+
+    .tabela-wrapper { display: none; }
+    .tabela-wrapper.active { display: block; }
+</style>
+
+<div class="layout-linha">
+    <div class="coluna-datas">
+        <span class="subtitulo-historico">Histórico</span>
+        <div class="lista-anos">
+            {% for ano in linha.anos_disponiveis %}
+            <a href="/linha/{{ linha.id }}/{{ ano }}/{{ linha.sentido_selecionado }}" 
+               class="ano-item {% if ano == linha.ano_selecionado %}active{% endif %}">{{ ano }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="coluna-conteudo">
+        <div class="header-top">
+            <div class="linha-info-principal">
+                <div class="icon-box-branco">{{ linha.id }}</div>
+                <div class="percurso-titulo">{{ linha.info.nome_variante }}</div>
+            </div>
+            
+            <div class="nav-controles">
+                <a href="/linha/{{ linha.id }}/{{ linha.ano_selecionado }}/ida" class="btn-sentido {% if linha.sentido_selecionado == 'ida' %}active{% endif %}">IDA</a>
+                <a href="/linha/{{ linha.id }}/{{ linha.ano_selecionado }}/volta" class="btn-sentido {% if linha.sentido_selecionado == 'volta' %}active{% endif %}">VOLTA</a>
+                <div class="data-box">Desde 10/01/{{ linha.ano_selecionado }}</div>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="col-percurso">
+                <h2 class="seccao-titulo">Percurso</h2>
+                <div class="itinerario">
+                    {% for p in linha.info.paragens %}
+                    <div class="paragem">
+                        <span class="num-paragem">{{ p.num }}</span>
+                        <div class="dot-container">
+                            <span class="dot 
+                                {% if p.tipo == 'terminal' %}terminal{% endif %} 
+                                {% if p.tipo == 'limite-m' %}limite-m{% endif %} 
+                                coroa-{{ p.coroa }}"></span>
+                        </div>
+                        
+                        <span class="capsula 
+                            {% if p.tipo == 'limite-m' %}bg-coroa-m-adb{% else %}bg-coroa-{{ p.coroa }}{% endif %}">
+                            {{ p.codigo }}
+                        </span>
+                        
+                        <span class="{% if p.tipo == 'terminal' %}nome-terminal-adb{% else %}nome-paragem{% endif %}">
+                            {{ p.nome }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-horarios">
+                <h2 class="seccao-titulo">Horários</h2>
+                <div class="tabs-horarios">
+                    <button class="tab-btn active" onclick="switchT('u')">Dias Úteis</button>
+                    <button class="tab-btn" onclick="switchT('s')">Sábados</button>
+                    <button class="tab-btn" onclick="switchT('d')">Dom/Fer</button>
+                </div>
+
+                <div id="u" class="tabela-wrapper active">
+                    <table class="tabela-horarios">
+                        <thead><tr><th class="col-h">H</th><th>MINUTOS</th></tr></thead>
+                        <tbody>
+                            {% for h in linha.info.horarios.dias_uteis %}
+                            <tr><td class="hora-txt">{{ h.hora }}</td><td>{{ h.min }}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div id="s" class="tabela-wrapper">
+                    <table class="tabela-horarios">
+                        <thead><tr><th class="col-h">H</th><th>MINUTOS</th></tr></thead>
+                        <tbody>
+                            {% for h in linha.info.horarios.sabados %}
+                            <tr><td class="hora-txt">{{ h.hora }}</td><td>{{ h.min }}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div id="d" class="tabela-wrapper">
+                    <table class="tabela-horarios">
+                        <thead><tr><th class="col-h">H</th><th>MINUTOS</th></tr></thead>
+                        <tbody>
+                            {% for h in linha.info.horarios.domingos_feriados %}
+                            <tr><td class="hora-txt">{{ h.hora }}</td><td>{{ h.min }}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchT(id) {
+        document.querySelectorAll('.tabela-wrapper').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+</script>
+{% endblock %}
