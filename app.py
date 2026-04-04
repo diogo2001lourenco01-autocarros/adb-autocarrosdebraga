@@ -5,26 +5,32 @@ from flask import Flask, render_template, abort
 
 app = Flask(__name__)
 
+# LISTA OFICIAL AdB
 CURIOSIDADES_ADB = [
     "A linha 99 foi inaugurada a 22 de setembro de 2025.",
-    "Os primeiros autocarros elétricos de Braga começaram a circular em 2018.",
-    "A AdB transporta mais de 12 milhões de passageiros por ano.",
-    "A linha 02 é uma das mais antigas e emblemáticas da cidade.",
-    "Em 2026, a AdB reforçou a ligação às zonas industriais com novos horários.",
-    "O sistema de bilhética permite agora o pagamento direto com telemóvel.",
-    "A frota da AdB percorre diariamente uma distância equivalente a meia volta ao mundo."
+    "Os primeiros autocarros elétricos chegaram em 2018.",
+    "A linha 97 foi inaugurada a 15 de setembro de 2025.",
+    "A linha 98 foi inaugurada a 4 de novembro de 2024.",
+    "Em 2026, os AdB vão lançar novas funcionalidades para todos os curiosos e entusiastas!"
 ]
 
 @app.route('/')
 def manutencao():
+    # Sorteio aleatório
     frase = random.choice(CURIOSIDADES_ADB)
     return render_template('manutencao.html', curiosidade=frase)
 
-# Rota das linhas mantem-se como configurado anteriormente
 @app.route('/linha/<numero>')
-def detalhe_linha(numero):
-    # ... lógica de carregamento do JSON ...
-    return render_template('linha.html')
+@app.route('/linha/<numero>/<ano>')
+@app.route('/linha/<numero>/<ano>/<sentido>')
+def detalhe_linha(numero, ano="2026", sentido="ida"):
+    caminho_json = os.path.join('static', 'data', 'linhas', f'{numero}.json')
+    if not os.path.exists(caminho_json):
+        abort(404)
+    with open(caminho_json, 'r', encoding='utf-8') as f:
+        dados = json.load(f)
+    return render_template('linha.html', linha=dados, ano=ano, sentido=sentido)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5002)
+    # Porta 5001 conforme o teu terminal do Mac
+    app.run(debug=True, port=5001)

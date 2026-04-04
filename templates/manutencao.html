@@ -5,45 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdB - Manutenção</title>
     <style>
+        /* --- CARREGAMENTO DAS FONTES (CORREÇÃO DE MAIÚSCULAS E EXTENSÕES) --- */
+        @font-face {
+            font-family: 'DINBlack';
+            src: url("{{ url_for('static', filename='fonts/DINBlack.otf') }}") format('opentype');
+            font-weight: 900;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'DINMedium';
+            src: url("{{ url_for('static', filename='fonts/DINMedium.ttf') }}") format('truetype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        /* ESTRUTURA GLOBAL ESQURA */
         body {
             margin: 0;
             padding: 0;
-            background-color: #374150; 
+            background-color: #374150; /* Cinza escuro AdB */
             color: white;
-            font-family: 'Arial', sans-serif; 
+            font-family: 'DINMedium', Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             text-align: center;
+            overflow: hidden;
         }
 
-        /* LOGÓTIPO CENTRADO */
+        /* LOGÓTIPO AdB CENTRADO */
         .logo-adb {
-            width: 180px; 
-            margin-bottom: 50px;
+            width: 280px;
+            height: auto;
+            margin-bottom: 60px;
         }
 
-        /* BLOCO DE TEXTO */
+        /* TEXTOS */
         .intro-txt {
             font-family: 'DINMedium', sans-serif;
-            font-size: 18px;
+            font-size: 19px;
             opacity: 0.8;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .historia-txt {
             font-family: 'DINBlack', sans-serif;
-            font-size: 32px;
-            color: #027cb7; 
-            max-width: 800px;
+            font-size: 34px;
+            color: #027cb7; /* Azul AdB */
+            max-width: 850px;
             line-height: 1.3;
-            margin-bottom: 60px;
-            padding: 0 20px;
+            margin-bottom: 70px;
+            padding: 0 30px;
         }
 
-        /* REDES SOCIAIS: FACEBOOK E INSTAGRAM */
+        /* REDES SOCIAIS */
         .social-container {
             display: flex;
             align-items: center;
@@ -52,9 +70,10 @@
             padding-top: 30px;
         }
 
-        .siga-nos {
+        .siga-nos-label {
             font-family: 'DINBlack', sans-serif;
-            font-size: 12px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -69,35 +88,33 @@
             transition: opacity 0.2s;
         }
 
-        .social-link:hover {
-            opacity: 0.7;
-        }
+        .social-link:hover { opacity: 0.7; }
 
         .icon-svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
+            width: 22px;
+            height: 22px;
+            margin-right: 12px;
             fill: white;
         }
 
-        /* MENSAGEM FINAL */
-        .refresh-footer {
+        /* RODAPÉ REFRESH */
+        .refresh-msg {
             margin-top: 50px;
             font-family: 'DINMedium', sans-serif;
             font-size: 11px;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.3);
         }
     </style>
 </head>
 <body>
 
-    <img src="{{ url_for('static', filename='images/logo_adb_branco.png') }}" alt="Autocarros de Braga" class="logo-adb">
+    <img src="{{ url_for('static', filename='images/adb.svg') }}" alt="Autocarros de Braga" class="logo-adb">
 
     <div class="intro-txt">Em breve, vai ver neste site que...</div>
     <div class="historia-txt">{{ curiosidade }}</div>
 
     <div class="social-container">
-        <span class="siga-nos">Siga-nos</span>
+        <span class="siga-nos-label">Siga-nos</span>
         
         <a href="https://www.facebook.com/AutocarrosDeBraga" target="_blank" class="social-link">
             <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
@@ -110,7 +127,7 @@
         </a>
     </div>
 
-    <div class="refresh-footer">Faça refresh e descubra uma nova curiosidade!</div>
+    <div class="refresh-msg">Faça refresh e descubra uma nova curiosidade.</div>
 
 </body>
 </html>
